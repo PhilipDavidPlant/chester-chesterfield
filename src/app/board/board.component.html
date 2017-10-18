@@ -1,3 +1,9 @@
-<div class="chess-board" *ngFor="let">
-  <div class="square"></div>
-<div>
+<div class="board-frame">
+  <div class="board">
+    <div *ngFor="let row of squares" class="row">
+      <div [ngClass]="{'black':(square.color == 'black')}" class="square" *ngFor="let square of row">
+      <ng-container *ngIf="square.currentPiece">{{square.currentPiece.constructor.name}}</ng-container>
+      </div>
+    </div>
+  <div>
+</div>

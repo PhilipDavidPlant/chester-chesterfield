@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChessPiece, King, Queen, Rook, Bishop, Knight, Pawn } from '../chess-pieces';
+import { Player } from '../player';
 
 @Component({
   selector: 'app-board',
@@ -10,9 +11,18 @@ export class BoardComponent implements OnInit {
 
   constructor() { }
 
-  placementPattern = [5,3,4,2,1,4,3,5,0,0,0,0,0,0,0,0];
+  placementPattern: number[][] = [
+    [6,4,5,3,2,5,4,6],
+    [1,1,1,1,1,1,1,1],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0],
+    [1,1,1,1,1,1,1,1],
+    [6,4,5,3,2,5,4,6]
+  ];
 
-  squares: Square[] = [];
+  squares: Square[][] = [];
 
   whitePlayer: Player;
   blackPlayer: Player;
@@ -21,52 +31,67 @@ export class BoardComponent implements OnInit {
 
   ngOnInit() {
 
+    for(let i=0; i < 8; i++){
+      this.squares[i] = [];
+    }
+
     this.whitePlayer = new Player();
     this.blackPlayer = new Player();
 
     this.selectedPlayer = this.whitePlayer;
 
-    for(let i=0; i < 64; i++){
-      switch(this.determinePieceToPlace(i)){
-        case pieceType.pawn:
-          this.squares.push(new Square(new Pawn()));
-        break;
-        case pieceType.king:
-          this.squares.push(new Square(new King()));
-        break;
-        case pieceType.queen:
-          this.squares.push(new Square(new Queen()));
-        break;
-        case pieceType.knight:
-          this.squares.push(new Square(new Knight()));
-        break;
-        case pieceType.bishop:
-          this.squares.push(new Square(new Bishop()));
-        break;
-        case pieceType.rook:
-          this.squares.push(new Square(new Rook()));
-        break;
-        default:
-        this.squares.push(new Square());
-        break;
+    for(let x= 0; x < 8; x++){
+      for(let y= 0; y < 8; y++){
+        
+        let squareColor = this.determineSquareColor(x,y);
+
+        switch(this.determinePieceToPlace(x,y)){
+          case pieceType.pawn:
+            this.squares[x][y] = new Square(squareColor,new Pawn());
+          break;
+          case pieceType.king:
+            this.squares[x][y] = new Square(squareColor,new King());
+          break;
+          case pieceType.queen:
+            this.squares[x][y] = new Square(squareColor,new Queen());
+          break;
+          case pieceType.knight:
+            this.squares[x][y] = new Square(squareColor,new Knight());
+          break;
+          case pieceType.bishop:
+            this.squares[x][y] = new Square(squareColor,new Bishop());
+          break;
+          case pieceType.rook:
+            this.squares[x][y] = new Square(squareColor,new Rook());
+          break;
+          case pieceType.none:
+            this.squares[x][y] = new Square(squareColor);
+          break;
+        }
       }
-      this.squares.push()
     }
+    console.log(this.squares);
   }
 
-  determinePieceToPlace(index:number){
-    if(index < this.placementPattern.length){
-      this.selectedPlayer = this.blackPlayer;
-      return index;
-    }else if(index > 48){
-      this.selectedPlayer = this.whitePlayer;
-      let reversedPattern = this.placementPattern.reverse();
-
-    }
+  determinePieceToPlace(x:number, y:number):pieceType{
+    return this.placementPattern[x][y] as pieceType;
   }
 
-  addPiece(){
+  determineSquareColor(x:number, y:number):string{
 
+    if(x % 2 === 0){
+      if(y % 2 === 0){
+        return 'black';
+      }else{
+        return 'white';
+      }
+    }else{
+      if(y % 2 === 0){
+        return 'white';
+      }else{
+        return 'black';
+      }
+    }
   }
 
   flatten2DMatrix(matrixToFlatten:any[][]){
@@ -77,22 +102,28 @@ export class BoardComponent implements OnInit {
       flattened = flattened.concat(matrixToFlatten[i]);
     }
     
-    return
+    return flattened;
   }
 
 }
 
 class Square {
+  constructor(color?:string, initialPiece?:ChessPiece){
+    this.color = color;
+    this.currentPiece = initialPiece;
+  }
   private x: number;
   private y: number;
-  currentPiece: ChessPiece;
+  public color: string;
+  public currentPiece: ChessPiece = null;
 }
 
 enum pieceType{
-  pawn = 0,
-  king = 1,
-  queen = 2,
-  knight = 3,
-  bishop = 4,
-  rook = 5,
+  none = 0,
+  pawn = 1,
+  king = 2,
+  queen = 3,
+  knight = 4,
+  bishop = 5,
+  rook = 6
 }
