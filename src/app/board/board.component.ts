@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChessPiece, King, Queen, Rook, Bishop, Knight, Pawn } from '../chess-pieces';
 import { Player } from '../player';
+import { Coordinate2D } from '../../data-structures/positioning';
 
 @Component({
   selector: 'app-board',
@@ -23,6 +24,7 @@ export class BoardComponent implements OnInit {
   ];
 
   squares: Square[][] = [];
+  pieces: ChessPiece[] = [];
 
   whitePlayer: Player;
   blackPlayer: Player;
@@ -44,28 +46,30 @@ export class BoardComponent implements OnInit {
       for(let y= 0; y < 8; y++){
         
         let squareColor = this.determineSquareColor(x,y);
+        let newPiece:ChessPiece = null;
+        let position = new Coordinate2D(x,y);
 
-        switch(this.determinePieceToPlace(x,y)){
+        switch(this.determinePieceToPlace(position)){
           case pieceType.pawn:
-            this.squares[x][y] = new Square(squareColor,new Pawn(this.selectedPlayer));
+            this.addSquareWithPiece(position,squareColor, new Pawn(this.selectedPlayer,position), x, y);
           break;
           case pieceType.king:
-            this.squares[x][y] = new Square(squareColor,new King(this.selectedPlayer));
+            this.addSquareWithPiece(position,squareColor, new King(this.selectedPlayer,position), x, y);
           break;
           case pieceType.queen:
-            this.squares[x][y] = new Square(squareColor,new Queen(this.selectedPlayer));
+            this.addSquareWithPiece(position,squareColor, new Queen(this.selectedPlayer,position), x, y);            
           break;
           case pieceType.knight:
-            this.squares[x][y] = new Square(squareColor,new Knight(this.selectedPlayer));
+            this.addSquareWithPiece(position,squareColor, new Knight(this.selectedPlayer,position), x, y);            
           break;
           case pieceType.bishop:
-            this.squares[x][y] = new Square(squareColor,new Bishop(this.selectedPlayer));
+            this.addSquareWithPiece(position,squareColor, new Bishop(this.selectedPlayer,position), x, y);            
           break;
           case pieceType.rook:
-            this.squares[x][y] = new Square(squareColor,new Rook(this.selectedPlayer));
+            this.addSquareWithPiece(position,squareColor, new Rook(this.selectedPlayer,position), x, y);                        
           break;
           case pieceType.none:
-            this.squares[x][y] = new Square(squareColor);
+            this.squares[x][y] = new Square(position,squareColor);
           break;
         }
       }
@@ -73,11 +77,16 @@ export class BoardComponent implements OnInit {
     console.log(this.squares);
   }
 
-  determinePieceToPlace(x:number, y:number):pieceType{
-    if(x > 4){
+  addSquareWithPiece(position: Coordinate2D,squareColor:string, pieceToAdd:ChessPiece, x: number, y:number){
+    this.squares[x][y] = new Square(position,squareColor,pieceToAdd);
+    this.pieces.push(pieceToAdd);
+  }
+
+  determinePieceToPlace(position:Coordinate2D):pieceType{
+    if(position.x > 4){
       this.selectedPlayer = this.blackPlayer;
     }
-    return this.placementPattern[x][y] as pieceType;
+    return this.placementPattern[position.x][position.y] as pieceType;
   }
 
   determineSquareColor(x:number, y:number):string{
@@ -111,12 +120,13 @@ export class BoardComponent implements OnInit {
 }
 
 class Square {
-  constructor(color?:string, initialPiece?:ChessPiece){
+  constructor(position:Coordinate2D, color:string, initialPiece?:ChessPiece){
     this.color = color;
     this.currentPiece = initialPiece;
+    this.position.x = position.x;
+    this.position.y = position.y;
   }
-  private x: number;
-  private y: number;
+  position: Coordinate2D;
   public color: string;
   public currentPiece: ChessPiece = null;
 }

@@ -2,7 +2,7 @@
   <div class="board">
     <div *ngFor="let row of squares" class="row">
       <div [ngClass]="{'black':(square.color == 'black')}" class="square" *ngFor="let square of row">
-      <ng-container *ngIf="square.currentPiece">{{square.currentPiece.displayCharacter}}</ng-container>
+      <ng-container *ngIf="square.currentPiece">{{square.currentPiece.constructor.name}}</ng-container>
       </div>
     </div>
   <div>

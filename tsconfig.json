@@ -11,6 +11,11 @@
     "typeRoots": [
       "node_modules/@types"
     ],
+    // "baseUrl": ".",
+    // "paths": {
+    //   "@data-structures/*": ["src/data-structures/*"],
+    //   "@assets/*": ["src/assets/*"]
+    // },
     "lib": [
       "es2017",
       "dom"
