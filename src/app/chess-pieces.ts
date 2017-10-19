@@ -3,20 +3,19 @@ import { WhiteCharacterMap, BlackCharcterMap } from '../assets/fonts/cheq/charac
 import { Coordinate2D } from '../data-structures/positioning';
 export abstract class ChessPiece {
 
-    //Chess Piece Constructor
-    constructor(ownerOfPiece:Player, position:Coordinate2D){
-        this.ownerOfPiece = ownerOfPiece;
-        //copy values so our square and piece positions can independant
-        this.position.x = position.x;
-        this.position.y = position.y;
-    }
-
     ownerOfPiece:Player;
     isUnmoved:boolean = true;
     specialMoves: SpecialMove[];
     //abstract determineMoves();
     displayCharacter: string = null;
     position: Coordinate2D;
+
+    //Chess Piece Constructor
+    constructor(ownerOfPiece:Player, position:Coordinate2D){
+        this.ownerOfPiece = ownerOfPiece;
+        //copy values so our square and piece positions can independant
+        this.position = new Coordinate2D(position.x, position.y);
+    }
 
     protected determineCharacterMap(){
         if(this.ownerOfPiece.color == "white"){

@@ -45,7 +45,7 @@ export class BoardComponent implements OnInit {
     for(let x= 0; x < 8; x++){
       for(let y= 0; y < 8; y++){
         
-        let squareColor = this.determineSquareColor(x,y);
+        let squareColor:string = this.determineSquareColor(x,y);
         let newPiece:ChessPiece = null;
         let position = new Coordinate2D(x,y);
 
@@ -123,8 +123,7 @@ class Square {
   constructor(position:Coordinate2D, color:string, initialPiece?:ChessPiece){
     this.color = color;
     this.currentPiece = initialPiece;
-    this.position.x = position.x;
-    this.position.y = position.y;
+    this.position = new Coordinate2D(position.x, position.y);
   }
   position: Coordinate2D;
   public color: string;
