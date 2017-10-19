@@ -1,5 +1,5 @@
 export const WhiteCharacterMap = {
-    pawn:'&#x0112',
+    pawn:'&#x0112;',
     rook:'r',
     knight:'h',
     bishop:'b',
