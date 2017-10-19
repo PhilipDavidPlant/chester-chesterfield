@@ -35,8 +35,8 @@ export class BoardComponent implements OnInit {
       this.squares[i] = [];
     }
 
-    this.whitePlayer = new Player();
-    this.blackPlayer = new Player();
+    this.whitePlayer = new Player('white');
+    this.blackPlayer = new Player('black');
 
     this.selectedPlayer = this.whitePlayer;
 
@@ -47,22 +47,22 @@ export class BoardComponent implements OnInit {
 
         switch(this.determinePieceToPlace(x,y)){
           case pieceType.pawn:
-            this.squares[x][y] = new Square(squareColor,new Pawn());
+            this.squares[x][y] = new Square(squareColor,new Pawn(this.selectedPlayer));
           break;
           case pieceType.king:
-            this.squares[x][y] = new Square(squareColor,new King());
+            this.squares[x][y] = new Square(squareColor,new King(this.selectedPlayer));
           break;
           case pieceType.queen:
-            this.squares[x][y] = new Square(squareColor,new Queen());
+            this.squares[x][y] = new Square(squareColor,new Queen(this.selectedPlayer));
           break;
           case pieceType.knight:
-            this.squares[x][y] = new Square(squareColor,new Knight());
+            this.squares[x][y] = new Square(squareColor,new Knight(this.selectedPlayer));
           break;
           case pieceType.bishop:
-            this.squares[x][y] = new Square(squareColor,new Bishop());
+            this.squares[x][y] = new Square(squareColor,new Bishop(this.selectedPlayer));
           break;
           case pieceType.rook:
-            this.squares[x][y] = new Square(squareColor,new Rook());
+            this.squares[x][y] = new Square(squareColor,new Rook(this.selectedPlayer));
           break;
           case pieceType.none:
             this.squares[x][y] = new Square(squareColor);
@@ -74,6 +74,9 @@ export class BoardComponent implements OnInit {
   }
 
   determinePieceToPlace(x:number, y:number):pieceType{
+    if(x > 4){
+      this.selectedPlayer = this.blackPlayer;
+    }
     return this.placementPattern[x][y] as pieceType;
   }
 

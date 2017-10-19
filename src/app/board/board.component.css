@@ -1,3 +1,8 @@
+@font-face {
+    font-family: chessIcons;
+    src: url('/assets/fonts/cheq.ttf');
+}
+
 .board-frame{
     height: 550px;
     width:550px;
@@ -31,6 +36,7 @@
     display: inline-block;
     position: relative;
     color:black;
+    font-size:50px;
 }
 
 .black{
