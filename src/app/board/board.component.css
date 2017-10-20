@@ -6,6 +6,7 @@
     border: 20px solid #392A0B;
     border-radius: 8px;
     position: relative;
+    font-size:0;
 }
 
 .board{
@@ -21,8 +22,10 @@
 
 .chess-piece{
     position: absolute;
-    background:seagreen;
+    opacity:0.5;
     z-index:5;
+    box-sizing: border-box;
+    font-size:0;
 }
 
 .row{

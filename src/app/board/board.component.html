@@ -1,13 +1,18 @@
 <div class="board-frame">
   <div class="board">
+
     <div class="chess-piece" 
-    [style.top]="(piece.position.x * findSqaureSideLength()) + 'px'"
-    [style.left]="(piece.position.y * findSqaureSideLength()) + 'px'"
+    [style.top]="(piece.currentSquare.position.x * findSqaureSideLength() + 4) + 'px'"
+    [style.left]="(piece.currentSquare.position.y * findSqaureSideLength() + 4) + 'px'"
     [style.width]="findSqaureSideLength() + 'px'" 
-    [style.height]="findSqaureSideLength() + 'px'" 
-    *ngFor="let piece of pieces"></div>
+    [style.height]="findSqaureSideLength() + 'px'"
+    [style.background]="piece.ownerOfPiece.color" 
+    *ngFor="let piece of pieces"
+    (click)="pieceClicked(piece)"
+    ></div>
+
     <div *ngFor="let row of squares" class="row">
-      <div [ngClass]="{'black':(square.color == 'black')}" class="square" *ngFor="let square of row">
+      <div [ngClass]="{'black':(square.color == 'black')}" (click)="sqaureClicked(square)" class="square" *ngFor="let square of row">
       <ng-container *ngIf="square.currentPiece">{{square.currentPiece.constructor.name}}</ng-container>
       </div>
     </div>

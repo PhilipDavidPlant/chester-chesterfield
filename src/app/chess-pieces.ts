@@ -8,13 +8,11 @@ export abstract class ChessPiece {
     specialMoves: SpecialMove[];
     //abstract determineMoves();
     displayCharacter: string = null;
-    position: Coordinate2D;
+    currentSquare: Square;
 
     //Chess Piece Constructor
-    constructor(ownerOfPiece:Player, position:Coordinate2D){
+    constructor(ownerOfPiece:Player){
         this.ownerOfPiece = ownerOfPiece;
-        //copy values so our square and piece positions can independant
-        this.position = new Coordinate2D(position.x, position.y);
     }
 
     protected determineCharacterMap(){
@@ -27,46 +25,62 @@ export abstract class ChessPiece {
 }
 
 export class Pawn extends ChessPiece {
-    constructor(ownerOfPiece:Player, position:Coordinate2D){
-        super(ownerOfPiece,position);
+    constructor(ownerOfPiece:Player){
+        super(ownerOfPiece);
         this.displayCharacter = this.determineCharacterMap()['pawn'];
     }
 }
 
 export class Rook extends ChessPiece {
-    constructor(ownerOfPiece:Player, position:Coordinate2D){
-        super(ownerOfPiece,position);
+    constructor(ownerOfPiece:Player){
+        super(ownerOfPiece);
         this.displayCharacter = this.determineCharacterMap()['rook'];
     }
 }
 
 export class Knight extends ChessPiece {
-    constructor(ownerOfPiece:Player, position:Coordinate2D){
-        super(ownerOfPiece,position);
+    constructor(ownerOfPiece:Player){
+        super(ownerOfPiece);
         this.displayCharacter = this.determineCharacterMap()['knight'];
     }
 }
 
 export class Bishop extends ChessPiece {
-    constructor(ownerOfPiece:Player, position:Coordinate2D){
-        super(ownerOfPiece,position);
+    constructor(ownerOfPiece:Player){
+        super(ownerOfPiece);
         this.displayCharacter = this.determineCharacterMap()['bishop'];
     }
 }
 
 export class King extends ChessPiece {
-    constructor(ownerOfPiece:Player, position:Coordinate2D){
-        super(ownerOfPiece,position);
+    constructor(ownerOfPiece:Player){
+        super(ownerOfPiece);
         this.displayCharacter = this.determineCharacterMap()['king'];
     }
 }
 
 export class Queen extends ChessPiece {
-    constructor(ownerOfPiece:Player, position:Coordinate2D){
-        super(ownerOfPiece,position);
+    constructor(ownerOfPiece:Player){
+        super(ownerOfPiece);
         this.displayCharacter = this.determineCharacterMap()['queen'];
     }
 }
+
+export class Square {
+    constructor(position:Coordinate2D, color:string, initialPiece?:ChessPiece){
+      this.color = color;
+
+      if(initialPiece !== undefined){
+        this.currentPiece = initialPiece;
+        this.currentPiece.currentSquare = this;
+      }
+      
+      this.position = new Coordinate2D(position.x, position.y);
+    }
+    position: Coordinate2D;
+    public color: string;
+    public currentPiece: ChessPiece = null;
+  }
 
 
 class SpecialMove {

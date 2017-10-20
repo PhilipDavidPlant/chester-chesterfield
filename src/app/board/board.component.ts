@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ChessPiece, King, Queen, Rook, Bishop, Knight, Pawn } from '../chess-pieces';
+import { ChessPiece, King, Queen, Rook, Bishop, Knight, Pawn, Square } from '../chess-pieces';
 import { Player } from '../player';
 import { Coordinate2D } from '../../data-structures/positioning';
 
@@ -31,7 +31,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
   selectedPlayer: Player;
 
-  oneSquareRef:Element
+  oneSquareRef:any
 
   ngOnInit() {
 
@@ -53,22 +53,22 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
         switch(this.determinePieceToPlace(position)){
           case pieceType.pawn:
-            this.addSquareWithPiece(position,squareColor, new Pawn(this.selectedPlayer,position), x, y);
+            this.addSquareWithPiece(position,squareColor, new Pawn(this.selectedPlayer));
           break;
           case pieceType.king:
-            this.addSquareWithPiece(position,squareColor, new King(this.selectedPlayer,position), x, y);
+            this.addSquareWithPiece(position,squareColor, new King(this.selectedPlayer));
           break;
           case pieceType.queen:
-            this.addSquareWithPiece(position,squareColor, new Queen(this.selectedPlayer,position), x, y);            
+            this.addSquareWithPiece(position,squareColor, new Queen(this.selectedPlayer));            
           break;
           case pieceType.knight:
-            this.addSquareWithPiece(position,squareColor, new Knight(this.selectedPlayer,position), x, y);            
+            this.addSquareWithPiece(position,squareColor, new Knight(this.selectedPlayer));            
           break;
           case pieceType.bishop:
-            this.addSquareWithPiece(position,squareColor, new Bishop(this.selectedPlayer,position), x, y);            
+            this.addSquareWithPiece(position,squareColor, new Bishop(this.selectedPlayer));            
           break;
           case pieceType.rook:
-            this.addSquareWithPiece(position,squareColor, new Rook(this.selectedPlayer,position), x, y);                        
+            this.addSquareWithPiece(position,squareColor, new Rook(this.selectedPlayer));                        
           break;
           case pieceType.none:
             this.squares[x][y] = new Square(position,squareColor);
@@ -80,11 +80,10 @@ export class BoardComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(){
-    this.oneSquareRef = document.querySelector('.square');
   }
 
-  addSquareWithPiece(position: Coordinate2D,squareColor:string, pieceToAdd:ChessPiece, x: number, y:number){
-    this.squares[x][y] = new Square(position,squareColor,pieceToAdd);
+  addSquareWithPiece(position: Coordinate2D,squareColor:string, pieceToAdd:ChessPiece){
+    this.squares[position.x][position.y] = new Square(position,squareColor,pieceToAdd);
     this.pieces.push(pieceToAdd);
   }
 
@@ -124,21 +123,18 @@ export class BoardComponent implements OnInit, AfterViewInit {
   }
 
   findSqaureSideLength(){
-    let width = this.oneSquareRef.clientWidth/8;
+    let width = 66.5;
     return width;
   }
 
-}
-
-class Square {
-  constructor(position:Coordinate2D, color:string, initialPiece?:ChessPiece){
-    this.color = color;
-    this.currentPiece = initialPiece;
-    this.position = new Coordinate2D(position.x, position.y);
+  pieceClicked(piece: ChessPiece){
+    console.log(piece);
   }
-  position: Coordinate2D;
-  public color: string;
-  public currentPiece: ChessPiece = null;
+
+  sqaureClicked(square : Square){
+    console.log(square);
+  }
+
 }
 
 enum pieceType{
