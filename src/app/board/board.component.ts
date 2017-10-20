@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ChessPiece, King, Queen, Rook, Bishop, Knight, Pawn } from '../chess-pieces';
 import { Player } from '../player';
 import { Coordinate2D } from '../../data-structures/positioning';
@@ -8,7 +8,7 @@ import { Coordinate2D } from '../../data-structures/positioning';
   templateUrl: './board.component.html',
   styleUrls: ['./board.component.css']
 })
-export class BoardComponent implements OnInit {
+export class BoardComponent implements OnInit, AfterViewInit {
 
   constructor() { }
 
@@ -30,6 +30,8 @@ export class BoardComponent implements OnInit {
   blackPlayer: Player;
 
   selectedPlayer: Player;
+
+  oneSquareRef:Element
 
   ngOnInit() {
 
@@ -74,7 +76,11 @@ export class BoardComponent implements OnInit {
         }
       }
     }
-    console.log(this.squares);
+    //console.log(this.squares);
+  }
+
+  ngAfterViewInit(){
+    this.oneSquareRef = document.querySelector('.square');
   }
 
   addSquareWithPiece(position: Coordinate2D,squareColor:string, pieceToAdd:ChessPiece, x: number, y:number){
@@ -115,6 +121,11 @@ export class BoardComponent implements OnInit {
     }
     
     return flattened;
+  }
+
+  findSqaureSideLength(){
+    let width = this.oneSquareRef.clientWidth/8;
+    return width;
   }
 
 }

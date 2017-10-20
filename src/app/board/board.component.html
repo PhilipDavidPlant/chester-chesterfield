@@ -1,5 +1,11 @@
 <div class="board-frame">
   <div class="board">
+    <div class="chess-piece" 
+    [style.top]="(piece.position.x * findSqaureSideLength()) + 'px'"
+    [style.left]="(piece.position.y * findSqaureSideLength()) + 'px'"
+    [style.width]="findSqaureSideLength() + 'px'" 
+    [style.height]="findSqaureSideLength() + 'px'" 
+    *ngFor="let piece of pieces"></div>
     <div *ngFor="let row of squares" class="row">
       <div [ngClass]="{'black':(square.color == 'black')}" class="square" *ngFor="let square of row">
       <ng-container *ngIf="square.currentPiece">{{square.currentPiece.constructor.name}}</ng-container>

@@ -5,6 +5,7 @@
     background:#281e08;
     border: 20px solid #392A0B;
     border-radius: 8px;
+    position: relative;
 }
 
 .board{
@@ -15,6 +16,13 @@
     padding:4px;
     border: 5px dashed #6B6559;
     box-sizing: border-box;
+    position: relative;
+}
+
+.chess-piece{
+    position: absolute;
+    background:seagreen;
+    z-index:5;
 }
 
 .row{
