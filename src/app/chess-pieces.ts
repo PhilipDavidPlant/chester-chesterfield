@@ -19,14 +19,14 @@ export abstract class ChessPiece {
     abstract determineAttacks();
     abstract initilizeChild();
     moveTo(targetSquare:Square){
-
+        this.currentSquare = targetSquare;
+        targetSquare.currentPiece = this;
+        this.resetReticles();        
     }
 
     activate(){
         //First Deacive any other active reticles
-        this.collectionsRef.reticles.forEach(reticle => {
-            reticle.deactivate();
-        });
+        this.resetReticles();
         //First Deactivate other pieces
         this.currentSquare.childRetical.activate(reticalType.active);
 
@@ -35,7 +35,6 @@ export abstract class ChessPiece {
 
     //Chess Piece Constructor
     constructor(public ownerOfPiece:Player, protected collectionsRef: Collections){
-        this.ownerOfPiece = ownerOfPiece;
         this.initilizeChild();
     }
 
@@ -48,6 +47,12 @@ export abstract class ChessPiece {
         }else if(this.ownerOfPiece.color == "black"){
             return imagesLocationPath + BlackImageMap[pieceType];
         }
+    }
+
+    resetReticles(){
+        this.collectionsRef.reticles.forEach(reticle => {
+            reticle.deactivate();
+        });
     }
 }
 
@@ -66,9 +71,10 @@ export class Pawn extends ChessPiece {
             moveValue = -1;
         }
 
-        let possibleYmovement = this.currentSquare.position.y + 1;
-        let squareToCheck = this.collectionsRef.squares[this.currentSquare.position.x][possibleYmovement]
+        let possibleXmovement = this.currentSquare.position.x + moveValue;
+        let squareToCheck = this.collectionsRef.squares[possibleXmovement][this.currentSquare.position.y]
         if(squareToCheck.currentPiece === null){
+            squareToCheck.childRetical.concernedPiece = this;
             squareToCheck.childRetical.activate(reticalType.move);
         }
     }
@@ -168,7 +174,7 @@ export class Reticle{
     public type: reticalType = reticalType.active;
     public concernedPiece: ChessPiece;
 
-    triggerMove(){
+    triggerAction(){
         this.concernedPiece.moveTo(this.parentSquare);
     }
 

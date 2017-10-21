@@ -132,6 +132,10 @@ export class BoardComponent implements OnInit, AfterViewInit {
   sqaureClicked(square : Square){
   }
 
+  reticleClicked(reticle: Reticle){
+    reticle.triggerAction();
+  }
+
 }
 
 enum pieceType{
