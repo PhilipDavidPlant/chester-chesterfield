@@ -1,68 +1,145 @@
 import { Player } from './player' ;
-import { WhiteCharacterMap, BlackCharcterMap } from '../assets/fonts/cheq/character-maps';
+import { WhiteImageMap, BlackImageMap } from '../assets/images/image-maps';
 import { Coordinate2D } from '../data-structures/positioning';
+
+export class Collections {
+    squares: Square[][] = [];
+    pieces: ChessPiece[] = [];
+    reticles: Reticle[] = []; 
+}
+
 export abstract class ChessPiece {
 
-    ownerOfPiece:Player;
     isUnmoved:boolean = true;
     specialMoves: SpecialMove[];
-    //abstract determineMoves();
-    displayCharacter: string = null;
+    imagePath: string = null;
     currentSquare: Square;
 
-    //Chess Piece Constructor
-    constructor(ownerOfPiece:Player){
-        this.ownerOfPiece = ownerOfPiece;
+    abstract determineMoves();
+    abstract determineAttacks();
+    abstract initilizeChild();
+    moveTo(targetSquare:Square){
+
     }
 
-    protected determineCharacterMap(){
+    activate(){
+        //First Deacive any other active reticles
+        this.collectionsRef.reticles.forEach(reticle => {
+            reticle.deactivate();
+        });
+        //First Deactivate other pieces
+        this.currentSquare.childRetical.activate(reticalType.active);
+
+        this.determineMoves();
+    }
+
+    //Chess Piece Constructor
+    constructor(public ownerOfPiece:Player, protected collectionsRef: Collections){
+        this.ownerOfPiece = ownerOfPiece;
+        this.initilizeChild();
+    }
+
+    protected determineImage(pieceType:string):string{
+
+        let imagesLocationPath = "../../assets/images/";
+
         if(this.ownerOfPiece.color == "white"){
-            return WhiteCharacterMap;
+            return imagesLocationPath + WhiteImageMap[pieceType];
         }else if(this.ownerOfPiece.color == "black"){
-            return BlackCharcterMap;
+            return imagesLocationPath + BlackImageMap[pieceType];
         }
     }
 }
 
 export class Pawn extends ChessPiece {
-    constructor(ownerOfPiece:Player){
-        super(ownerOfPiece);
-        this.displayCharacter = this.determineCharacterMap()['pawn'];
+    
+    initilizeChild(){
+        this.imagePath = this.determineImage('pawn');
+    }
+
+    determineMoves(){
+
+        let moveValue: number;
+        if(this.ownerOfPiece.color === 'white'){
+            moveValue = +1;
+        }else if (this.ownerOfPiece.color === 'black'){
+            moveValue = -1;
+        }
+
+        let possibleYmovement = this.currentSquare.position.y + 1;
+        let squareToCheck = this.collectionsRef.squares[this.currentSquare.position.x][possibleYmovement]
+        if(squareToCheck.currentPiece === null){
+            squareToCheck.childRetical.activate(reticalType.move);
+        }
+    }
+
+    determineAttacks(){
+
     }
 }
 
 export class Rook extends ChessPiece {
-    constructor(ownerOfPiece:Player){
-        super(ownerOfPiece);
-        this.displayCharacter = this.determineCharacterMap()['rook'];
+    
+    initilizeChild(){
+        this.imagePath = this.determineImage('rook');
+    }
+
+    determineMoves(){
+    }
+
+    determineAttacks(){
     }
 }
 
 export class Knight extends ChessPiece {
-    constructor(ownerOfPiece:Player){
-        super(ownerOfPiece);
-        this.displayCharacter = this.determineCharacterMap()['knight'];
+    
+    initilizeChild(){
+        this.imagePath = this.determineImage('knight');
+    }
+
+    determineMoves(){
+    }
+
+    determineAttacks(){
     }
 }
 
 export class Bishop extends ChessPiece {
-    constructor(ownerOfPiece:Player){
-        super(ownerOfPiece);
-        this.displayCharacter = this.determineCharacterMap()['bishop'];
+    
+    initilizeChild(){
+        this.imagePath = this.determineImage('bishop');
+    }
+
+    determineMoves(){
+    }
+
+    determineAttacks(){
     }
 }
 
 export class King extends ChessPiece {
-    constructor(ownerOfPiece:Player){
-        super(ownerOfPiece);
-        this.displayCharacter = this.determineCharacterMap()['king'];
+    
+    initilizeChild(){
+        this.imagePath = this.determineImage('king');
+    }
+
+    determineMoves(){
+    }
+
+    determineAttacks(){
     }
 }
 
 export class Queen extends ChessPiece {
-    constructor(ownerOfPiece:Player){
-        super(ownerOfPiece);
-        this.displayCharacter = this.determineCharacterMap()['queen'];
+    
+    initilizeChild(){
+        this.imagePath = this.determineImage('queen');
+    }
+
+    determineMoves(){
+    }
+
+    determineAttacks(){
     }
 }
 
@@ -77,11 +154,40 @@ export class Square {
       
       this.position = new Coordinate2D(position.x, position.y);
     }
-    position: Coordinate2D;
+    public position: Coordinate2D;
     public color: string;
     public currentPiece: ChessPiece = null;
-  }
+    public childRetical: Reticle;
+}
 
+export class Reticle{
+    constructor(public parentSquare:Square){
+        parentSquare.childRetical = this;
+    }
+    private isActive:boolean = false;
+    public type: reticalType = reticalType.active;
+    public concernedPiece: ChessPiece;
+
+    triggerMove(){
+        this.concernedPiece.moveTo(this.parentSquare);
+    }
+
+    activate(type:reticalType){
+        this.isActive = true;
+        this.type = type;
+    }
+
+    deactivate(){
+        this.isActive = false;
+    }
+}
+
+enum reticalType{
+    move = 1,
+    attack = 2,
+    active = 3,
+    check = 4
+}
 
 class SpecialMove {
     

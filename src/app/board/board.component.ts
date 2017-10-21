@@ -1,5 +1,5 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { ChessPiece, King, Queen, Rook, Bishop, Knight, Pawn, Square } from '../chess-pieces';
+import { ChessPiece, King, Queen, Rook, Bishop, Knight, Pawn, Square, Reticle, Collections } from '../chess-pieces';
 import { Player } from '../player';
 import { Coordinate2D } from '../../data-structures/positioning';
 
@@ -23,8 +23,7 @@ export class BoardComponent implements OnInit, AfterViewInit {
     [6,4,5,3,2,5,4,6]
   ];
 
-  squares: Square[][] = [];
-  pieces: ChessPiece[] = [];
+  collections: Collections = new Collections();
 
   whitePlayer: Player;
   blackPlayer: Player;
@@ -35,8 +34,9 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
 
+    //Initialise the second dimension of the sqaures grid
     for(let i=0; i < 8; i++){
-      this.squares[i] = [];
+      this.collections.squares[i] = [];
     }
 
     this.whitePlayer = new Player('white');
@@ -53,38 +53,47 @@ export class BoardComponent implements OnInit, AfterViewInit {
 
         switch(this.determinePieceToPlace(position)){
           case pieceType.pawn:
-            this.addSquareWithPiece(position,squareColor, new Pawn(this.selectedPlayer));
+            this.addSquareWithPiece(position,squareColor, new Pawn(this.selectedPlayer,this.collections));
           break;
           case pieceType.king:
-            this.addSquareWithPiece(position,squareColor, new King(this.selectedPlayer));
+            this.addSquareWithPiece(position,squareColor, new King(this.selectedPlayer,this.collections));
           break;
           case pieceType.queen:
-            this.addSquareWithPiece(position,squareColor, new Queen(this.selectedPlayer));            
+            this.addSquareWithPiece(position,squareColor, new Queen(this.selectedPlayer,this.collections));            
           break;
           case pieceType.knight:
-            this.addSquareWithPiece(position,squareColor, new Knight(this.selectedPlayer));            
+            this.addSquareWithPiece(position,squareColor, new Knight(this.selectedPlayer,this.collections));            
           break;
           case pieceType.bishop:
-            this.addSquareWithPiece(position,squareColor, new Bishop(this.selectedPlayer));            
+            this.addSquareWithPiece(position,squareColor, new Bishop(this.selectedPlayer,this.collections));            
           break;
           case pieceType.rook:
-            this.addSquareWithPiece(position,squareColor, new Rook(this.selectedPlayer));                        
+            this.addSquareWithPiece(position,squareColor, new Rook(this.selectedPlayer,this.collections));                        
           break;
           case pieceType.none:
-            this.squares[x][y] = new Square(position,squareColor);
+            this.addSquareWithPiece(position,squareColor);                        
           break;
         }
       }
     }
-    //console.log(this.squares);
+    //console.log(this.collections.squares);
   }
 
   ngAfterViewInit(){
   }
 
-  addSquareWithPiece(position: Coordinate2D,squareColor:string, pieceToAdd:ChessPiece){
-    this.squares[position.x][position.y] = new Square(position,squareColor,pieceToAdd);
-    this.pieces.push(pieceToAdd);
+  addSquareWithPiece(position: Coordinate2D,squareColor:string, pieceToAdd:ChessPiece = null){
+    let newSqaure: Square;
+    if(pieceToAdd != null){
+      newSqaure = new Square(position,squareColor,pieceToAdd);
+      //Add each new pice to an array holding all pieces
+      this.collections.pieces.push(pieceToAdd);
+    }else{
+      newSqaure = new Square(position,squareColor);
+    }
+    this.collections.squares[position.x][position.y] = newSqaure;
+    //Add a new recticle for each sqaure
+    this.collections.reticles.push(new Reticle(newSqaure));
   }
 
   determinePieceToPlace(position:Coordinate2D):pieceType{
@@ -111,28 +120,16 @@ export class BoardComponent implements OnInit, AfterViewInit {
     }
   }
 
-  flatten2DMatrix(matrixToFlatten:any[][]){
-    var flattened = [];
-   
-    for(var i = 0; i < matrixToFlatten.length; i++)
-    {
-      flattened = flattened.concat(matrixToFlatten[i]);
-    }
-    
-    return flattened;
-  }
-
   findSqaureSideLength(){
     let width = 66.5;
     return width;
   }
 
   pieceClicked(piece: ChessPiece){
-    console.log(piece);
+    piece.activate();
   }
 
   sqaureClicked(square : Square){
-    console.log(square);
   }
 
 }

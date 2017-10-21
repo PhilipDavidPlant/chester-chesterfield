@@ -22,10 +22,39 @@
 
 .chess-piece{
     position: absolute;
-    opacity:0.5;
     z-index:5;
     box-sizing: border-box;
     font-size:0;
+    padding:8px;
+}
+
+.movement-reticle{
+    position: absolute;
+    opacity:0.8;
+    z-index:6;
+    box-sizing: border-box;
+    font-size:0;
+}
+
+.movement-reticle.movement{
+    border: 5px solid #0393b7;
+    -moz-box-shadow:    inset 0 0 8px #0393b7;
+    -webkit-box-shadow: inset 0 0 8px #0393b7;
+    box-shadow:         inset 0 0 8px #0393b7;
+}
+
+.movement-reticle.attack{
+    border: 5px solid #e84f20;
+    -moz-box-shadow:    inset 0 0 8px #e84f20;
+    -webkit-box-shadow: inset 0 0 8px #e84f20;
+    box-shadow:         inset 0 0 8px #e84f20;
+}
+
+.movement-reticle.active{
+    border: 5px solid #94ff6d;
+    -moz-box-shadow:    inset 0 0 8px #94ff6d;
+    -webkit-box-shadow: inset 0 0 8px #94ff6d;
+    box-shadow:         inset 0 0 8px #94ff6d;
 }
 
 .row{
