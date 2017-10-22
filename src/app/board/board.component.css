@@ -7,6 +7,8 @@
     border-radius: 8px;
     position: relative;
     font-size:0;
+    margin-left: 200px;
+    margin-right: 200px;
 }
 
 .board{
@@ -26,6 +28,8 @@
     box-sizing: border-box;
     font-size:0;
     padding:8px;
+    transition:0.5s;
+    transition-timing-function: cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 .movement-reticle{

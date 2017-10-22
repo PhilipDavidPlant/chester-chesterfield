@@ -136,6 +136,22 @@ export class BoardComponent implements OnInit, AfterViewInit {
     reticle.triggerAction();
   }
 
+  getTop(piece: ChessPiece){
+    if(piece.isTaken){
+      return (piece.currentSquare.position.x * this.findSqaureSideLength() + piece.topOffset + 4)
+    }else{
+      return (piece.currentSquare.position.x * this.findSqaureSideLength() + 4)      
+    }
+  }
+
+  getLeft(piece: ChessPiece){
+    if(piece.isTaken){
+      return (piece.currentSquare.position.y * this.findSqaureSideLength() + piece.leftOffset + 4)
+    }else{
+      return (piece.currentSquare.position.y * this.findSqaureSideLength() + 4)      
+    }
+  }
+
 }
 
 enum pieceType{

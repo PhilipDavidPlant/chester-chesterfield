@@ -17,8 +17,8 @@
     </ng-container>
 
     <div class="chess-piece" 
-    [style.top]="(piece.currentSquare.position.x * findSqaureSideLength() + 4) + 'px'"
-    [style.left]="(piece.currentSquare.position.y * findSqaureSideLength() + 4) + 'px'"
+    [style.top]="getTop(piece) + 'px'"
+    [style.left]="getLeft(piece) + 'px'"
     [style.width]="findSqaureSideLength() + 'px'" 
     [style.height]="findSqaureSideLength() + 'px'"
     *ngFor="let piece of collections.pieces"
