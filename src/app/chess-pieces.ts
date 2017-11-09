@@ -216,6 +216,38 @@ export class Knight extends ChessPiece {
     }
 
     determineMoves(){
+        let switchXandY = false;
+        let xCoord:number;
+        let yCoord:number;
+        for(let i=0;i<8;i++){
+
+            debugger;
+
+            let sign = -1;
+            if(i % 2 == 0){ 
+                sign = 1; 
+            }
+
+            xCoord = this.currentSquare.position.x;
+            yCoord = this.currentSquare.position.y;
+
+            let possibleX = xCoord + (sign * 2);
+            let possibleY = yCoord + sign;
+
+            if(switchXandY){ 
+                let temp = possibleX;
+                possibleX = possibleY;
+                possibleY = possibleX;
+            }
+
+            if(this.isInsideBounds(possibleX) && this.isInsideBounds(possibleY)){
+                let squareToCheck = this.collectionsRef.squares[possibleY][possibleX];
+                if(squareToCheck.currentPiece === null){
+                    squareToCheck.childRetical.concernedPiece = this;
+                    squareToCheck.childRetical.activate(reticleType.move);
+                }
+            }
+        }
     }
 
     determineAttacks(){
